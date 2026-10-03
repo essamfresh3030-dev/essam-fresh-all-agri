@@ -6,12 +6,23 @@ import 'local_db.dart';
 
 class ApiClient {
   static const String defaultUrl = 'https://agri-erp-demo.onrender.com';
-  String baseUrl = defaultUrl;
+  String baseUrl;
   final LocalDb localDb = LocalDb();
+
+  ApiClient({this.baseUrl = defaultUrl});
 
   Future<void> init() async {
     final prefs = await SharedPreferences.getInstance();
-    baseUrl = prefs.getString('api_base_url') ?? defaultUrl;
+    final savedUrl = prefs.getString('api_base_url');
+    if (savedUrl != null && savedUrl.isNotEmpty) {
+      baseUrl = savedUrl;
+    }
+  }
+
+  Future<bool> isLoggedIn() async {
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('auth_token');
+    return token != null && token.isNotEmpty;
   }
 
   Future<Map<String, String>> _headers() async {
