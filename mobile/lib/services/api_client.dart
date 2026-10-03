@@ -1,43 +1,61 @@
-import 'package:sqflite/sqflite.dart';
-import 'package:path/path.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:uuid/uuid.dart';
+import 'local_db.dart'; // تم إضافة الاستيراد لمنع خطأ Couldn't find constructor 'LocalDb'
 
-class LocalDb {
-  static Database? _db;
+class ApiClient {
+  static const String defaultUrl = 'https://agri-erp-demo.onrender.com';
+  String baseUrl;
+  final LocalDb localDb = LocalDb();
 
-  Future<Database> get database async {
-    if (_db != null) return _db!;
-    _db = await _initDb();
-    return _db!;
+  ApiClient({this.baseUrl = defaultUrl});
+
+  Future<void> init() async {
+    final prefs = await SharedPreferences.getInstance();
+    final savedUrl = prefs.getString('api_base_url');
+    if (savedUrl != null && savedUrl.isNotEmpty) {
+      baseUrl = savedUrl;
+    }
   }
 
-  Future<Database> _initDb() async {
-    final dbPath = await getDatabasesPath();
-    final path = join(dbPath, 'agri_erp_offline.db');
+  Future<bool> isLoggedIn() async {
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('auth_token');
+    return token != null && token.isNotEmpty;
+  }
 
-    return await openDatabase(
-      path,
-      version: 1,
-      onCreate: (db, version) async {
-        await db.execute('''
-          CREATE TABLE offline_queue (
-            id TEXT PRIMARY KEY,
-            endpoint TEXT NOT NULL,
-            method TEXT NOT NULL,
-            payload TEXT NOT NULL,
-            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-          )
-        ''');
-      },
+  Future<Map<String, String>> _headers() async {
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('auth_token');
+    return {
+      'Content-Type': 'application/json',
+      if (token != null) 'Authorization': 'Bearer $token',
+    };
+  }
+
+  Future<dynamic> get(String endpoint) async {
+    final response = await http.get(
+      Uri.parse('$baseUrl/api/$endpoint'),
+      headers: await _headers(),
     );
+    if (response.statusCode == 200) {
+      return jsonDecode(response.body);
+    }
+    throw Exception('فشل جلب البيانات: ${response.statusCode}');
   }
 
-  Future<void> enqueue(String id, String endpoint, String method, String payload) async {
-    final db = await database;
-    await db.insert('offline_queue', {
-      'id': id,
-      'endpoint': endpoint,
-      'method': method,
-      'payload': payload,
-    }, conflictAlgorithm: ConflictAlgorithm.replace);
+  Future<bool> postOfflineSafe(String endpoint, Map<String, dynamic> body) async {
+    final payload = jsonEncode(body);
+    try {
+      final r = await http.post(
+        Uri.parse('$baseUrl/api/$endpoint'),
+        headers: await _headers(),
+        body: payload,
+      ).timeout(const Duration(seconds: 8));
+      if (r.statusCode >= 200 && r.statusCode < 300) return true;
+    } catch (_) {}
+    await localDb.enqueue(Uuid().v4(), '/api/$endpoint', 'POST', payload);
+    return false;
   }
 }
