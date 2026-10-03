@@ -24,10 +24,11 @@ jobs:
         with:
           channel: 'stable'
 
-      - name: Install Dependencies
+      - name: Install Dependencies & Create Android Platform if Missing
         run: |
           if [ -d "mobile" ]; then cd mobile; fi
           flutter pub get
+          if [ ! -d "android" ]; then flutter create . --platforms=android; fi
 
       - name: Build APK
         run: |
@@ -40,4 +41,3 @@ jobs:
           name: AgriERP-App
           path: |
             **/build/app/outputs/flutter-apk/app-release.apk
-            mobile/build/app/outputs/flutter-apk/app-release.apk
