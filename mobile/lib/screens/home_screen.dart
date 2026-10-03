@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import '../services/api_client.dart';
 
 class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
+  final ApiClient api;
+
+  const HomeScreen({super.key, required this.api});
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +29,11 @@ class HomeScreen extends StatelessWidget {
   Widget _buildMenuCard(BuildContext context, String title, IconData icon, String route) {
     return Card(
       child: InkWell(
-        onTap: () => Navigator.pushNamed(context, route),
+        onTap: () {
+          if (ModalRoute.of(context)?.settings.name != route) {
+            Navigator.pushNamed(context, route);
+          }
+        },
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -64,4 +71,4 @@ class SimpleModule extends StatelessWidget {
       ),
     );
   }
-}ring title;final IconData icon;const SimpleModule({super.key,required this.title,required this.icon});@override Widget build(BuildContext c)=>Scaffold(appBar:AppBar(title:Text(title)),body:Center(child:Column(mainAxisAlignment:MainAxisAlignment.center,children:[Icon(icon,size:72),const SizedBox(height:16),Text('واجهة ${title} قيد التوسعة في الإصدار التالي.'),const SizedBox(height:8),const Text('الـAPI الأساسي جاهز للعمل.')]));}
+}
