@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import '../services/api_client.dart';
 
 class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key});
+  final ApiClient api;
+  const LoginScreen({super.key, required this.api});
 
   @override
   State<LoginScreen> createState() => _LoginScreenState();
