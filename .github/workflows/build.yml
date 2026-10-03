@@ -11,25 +11,21 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # 1. جلب الكود من المستودع
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      # 2. إعداد بيئة Java
       - name: Set up Java
         uses: actions/setup-java@v3
         with:
           distribution: 'zulu'
           java-version: '17'
 
-      # 3. إعداد بيئة Flutter
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
           flutter-version: '3.x'
           channel: 'stable'
 
-      # 4. تنظيف الكاش وبناء تطبيق Flutter APK
       - name: Build Release APK
         working-directory: mobile
         run: |
@@ -37,7 +33,6 @@ jobs:
           flutter pub get
           flutter build apk --release
 
-      # 5. رفع ملف الـ APK الناتج كـ Artifact للتنزيل
       - name: Upload Release APK Artifact
         uses: actions/upload-artifact@v4
         with:
