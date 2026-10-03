@@ -1,0 +1,8 @@
+import 'package:flutter/material.dart';
+import '../services/api_client.dart';
+import 'home_screen.dart';
+class LoginScreen extends StatefulWidget{final ApiClient api; const LoginScreen({super.key,required this.api}); @override State<LoginScreen> createState()=>_LoginScreenState();}
+class _LoginScreenState extends State<LoginScreen>{final u=TextEditingController(text:'admin'); final p=TextEditingController(); bool busy=false; String? error;
+Future<void> go() async {setState(()=>busy=true); final ok=await widget.api.login(u.text.trim(),p.text); if(!mounted)return; setState(()=>busy=false); if(ok){Navigator.pushReplacement(context,MaterialPageRoute(builder:(_)=>HomeScreen(api:widget.api)));}else setState(()=>error='اسم المستخدم أو كلمة المرور غير صحيحة');}
+@override Widget build(BuildContext c)=>Scaffold(body:Center(child:ConstrainedBox(constraints:const BoxConstraints(maxWidth:420),child:Card(margin:const EdgeInsets.all(24),child:Padding(padding:const EdgeInsets.all(24),child:Column(mainAxisSize:MainAxisSize.min,children:[const Icon(Icons.agriculture,size:64),const SizedBox(height:12),const Text('Agri ERP',style:TextStyle(fontSize:28,fontWeight:FontWeight.bold)),const SizedBox(height:24),TextField(controller:u,decoration:const InputDecoration(labelText:'اسم المستخدم',prefixIcon:Icon(Icons.person))),TextField(controller:p,obscureText:true,decoration:const InputDecoration(labelText:'كلمة المرور',prefixIcon:Icon(Icons.lock))),if(error!=null) Padding(padding:const EdgeInsets.only(top:12),child:Text(error!,style:TextStyle(color:Theme.of(c).colorScheme.error))),const SizedBox(height:20),SizedBox(width:double.infinity,child:FilledButton(onPressed:busy?null:go,child:Text(busy?'جاري الدخول...':'دخول')))]))))));}
+}

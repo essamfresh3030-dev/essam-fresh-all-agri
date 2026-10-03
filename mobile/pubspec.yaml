@@ -1,0 +1,18 @@
+name: agri_erp_mobile
+description: Agri ERP cross-platform client for Android, iOS, Windows and Web.
+publish_to: 'none'
+version: 1.1.0+11
+environment:
+  sdk: '>=3.3.0 <4.0.0'
+dependencies:
+  flutter:
+    sdk: flutter
+  http: ^1.2.2
+  sqflite: ^2.3.3+1
+  path: ^1.9.0
+  connectivity_plus: ^6.1.0
+  uuid: ^4.5.1
+  shared_preferences: ^2.3.2
+  cupertino_icons: ^1.0.8
+flutter:
+  uses-material-design: true

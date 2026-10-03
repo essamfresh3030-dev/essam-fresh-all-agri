@@ -1,0 +1,25 @@
+services:
+  postgres:
+    image: postgres:16
+    environment:
+      POSTGRES_DB: agri_erp
+      POSTGRES_USER: agri
+      POSTGRES_PASSWORD: agri_change_me
+    ports:
+      - "5432:5432"
+    volumes:
+      - agri_pgdata:/var/lib/postgresql/data
+
+  backend:
+    build: ./backend
+    environment:
+      DATABASE_URL: postgresql+psycopg://agri:agri_change_me@postgres:5432/agri_erp
+      JWT_SECRET: change-this-to-a-random-32-byte-secret
+      ADMIN_PASSWORD: change-admin-password
+    ports:
+      - "8000:8000"
+    depends_on:
+      - postgres
+
+volumes:
+  agri_pgdata:

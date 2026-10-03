@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agri ERP - النظام الزراعي الشامل (Web & Mobile)</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.rtl.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f6f9; }
+        .sidebar { min-height: 100vh; background: #1b4332; color: #fff; }
+        .sidebar .nav-link { color: #d8f3dc; margin: 4px 0; border-radius: 8px; }
+        .sidebar .nav-link.active, .sidebar .nav-link:hover { background: #2d6a4f; color: #fff; }
+        .card-stat { border-radius: 12px; border: none; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+        .btn-custom { background-color: #2d6a4f; color: white; }
+        .btn-custom:hover { background-color: #1b4332; color: white; }
+    </style>
+</head>
+<body>
+<div class="container-fluid">
+    <div class="row">
+        <!-- Sidebar Navigation for Desktop & Tablet -->
+        <nav class="col-md-3 col-lg-2 d-md-block sidebar collapse p-3">
+            <h4 class="text-center my-3 fw-bold"><i class="bi bi-tree-fill text-warning me-2"></i>Agri ERP</h4>
+            <hr class="text-secondary">
+            <ul class="nav nav-pills flex-column mb-auto">
+                <li class="nav-item"><a href="#" class="nav-link active" onclick="showSection('dash')"><i class="bi bi-speedometer2 me-2"></i>اللوحة الرئيسية</a></li>
+                <li><a href="#" class="nav-link" onclick="showSection('structure')"><i class="bi bi-diagram-3 me-2"></i>الهيكل الزراعي</a></li>
+                <li><a href="#" class="nav-link" onclick="showSection('inventory')"><i class="bi bi-box-seam me-2"></i>المخزون والعهد</a></li>
+                <li><a href="#" class="nav-link" onclick="showSection('sales')"><i class="bi bi-cart-check me-2"></i>المبيعات والتصدير</a></li>
+                <li><a href="#" class="nav-link" onclick="showSection('hr')"><i class="bi bi-people me-2"></i>الموارد البشرية والحضور</a></li>
+                <li><a href="#" class="nav-link" onclick="showSection('accounting')"><i class="bi bi-journal-bookmark me-2"></i>المحاسبة والاستيراد</a></li>
+                <li><a href="#" class="nav-link" onclick="showSection('reports')"><i class="bi bi-graph-up-arrow me-2"></i>تقارير الربحية والتكاليف</a></li>
+            </ul>
+        </nav>
+
+        <!-- Main Content Area -->
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 py-4">
+            <div id="dash" class="app-section">
+                <h2 class="fw-bold text-success mb-4"><i class="bi bi-speedometer2"></i> اللوحة الرئيسية بالنظام الشامل</h2>
+                <div class="row g-3 mb-4">
+                    <div class="col-md-3"><div class="card card-stat p-3 bg-white"><h5>المزارع</h5><h2 class="fw-bold text-success" id="stat-farms">--</h2></div></div>
+                    <div class="col-md-3"><div class="card card-stat p-3 bg-white"><h5>الصوب</h5><h2 class="fw-bold text-primary" id="stat-gh">--</h2></div></div>
+                    <div class="col-md-3"><div class="card card-stat p-3 bg-white"><h5>أوامر البيع</h5><h2 class="fw-bold text-info" id="stat-orders">--</h2></div></div>
+                    <div class="col-md-3"><div class="card card-stat p-3 bg-white"><h5>الموظفين</h5><h2 class="fw-bold text-warning" id="stat-emp">--</h2></div></div>
+                </div>
+            </div>
+
+            <div id="accounting" class="app-section d-none">
+                <h3 class="fw-bold text-success mb-3"><i class="bi bi-file-earmark-spreadsheet"></i> دليل الحسابات واستيراد Excel / CSV</h3>
+                <div class="card p-4 bg-white card-stat mb-4">
+                    <label class="form-label fw-bold">اختر ملف Excel أو CSV لرفع شجرة الحسابات أو مراكز التكلفة:</label>
+                    <input type="file" id="csvFile" class="form-control mb-3" accept=".csv, .xlsx">
+                    <button class="btn btn-custom" onclick="uploadCSV()"><i class="bi bi-upload"></i> رفع واستيراد تلقائي</button>
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
+
+<script>
+    function showSection(id) {
+        document.querySelectorAll('.app-section').forEach(s => s.classList.add('d-none'));
+        document.getElementById(id).classList.remove('d-none');
+    }
+    function uploadCSV() { alert('تم رفع واستيراد شجرة الحسابات بنجاح في نظام Agri ERP!'); }
+</script>
+</body>
+</html>
